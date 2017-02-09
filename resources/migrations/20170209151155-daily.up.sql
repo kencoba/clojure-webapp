@@ -18,12 +18,12 @@ CREATE TABLE schedule
  project_id INTEGER NOT NULL,
  price INTEGER NOT NULL);
 ALTER TABLE schedule
-    ADD CONSTRAINT fk_course_id
+    ADD CONSTRAINT schedule_fk_course_id
     FOREIGN KEY (course_id)
     REFERENCES course(id)
     ON DELETE CASCADE;
 ALTER TABLE schedule
-    ADD CONSTRAINT fk_project_id
+    ADD CONSTRAINT schedule_fk_project_id
     FOREIGN KEY (project_id)
     REFERENCES project(id)
     ON DELETE CASCADE;
@@ -42,12 +42,12 @@ CREATE TABLE daily
  start_time timestamp NOT NULL,
  end_time timestamp NOT NULL);
 ALTER TABLE daily
-    ADD CONSTRAINT fk_schedule_id
+    ADD CONSTRAINT daily_fk_schedule_id
     FOREIGN KEY (schedule_id)
     REFERENCES schedule(id)
     ON DELETE CASCADE;
 ALTER TABLE daily
-    ADD CONSTRAINT fk_room_id
+    ADD CONSTRAINT daily_fk_room_id
     FOREIGN KEY (room_id)
     REFERENCES room(id)
     ON DELETE CASCADE;
@@ -58,9 +58,9 @@ CREATE TABLE entry
  schedule_id INTEGER NOT NULL,
  timestamp TIMESTAMP NOT NULL);
 ALTER TABLE entry
-    ADD CONSTRAINT fk_schedule_id
+    ADD CONSTRAINT entry_fk_schedule_id
     FOREIGN KEY (schedule_id)
-    REFERENCES schecule(id)
+    REFERENCES schedule(id)
     ON DELETE CASCADE;
 
 CREATE TABLE student
@@ -73,7 +73,7 @@ CREATE TABLE student
  last_name_kana VARCHAR(255) NOT NULL,
  email VARCHAR(255) NOT NULL);
 ALTER TABLE student
-    ADD CONSTRAINT fk_entry_id
+    ADD CONSTRAINT student_fk_entry_id
     FOREIGN KEY (entry_id)
     REFERENCES entry(id)
     ON DELETE CASCADE;
