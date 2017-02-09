@@ -34,3 +34,21 @@
             :last_login nil
             :is_active  nil}
            (db/get-user t-conn {:id "1"})))))
+
+(deftest test-messages
+  (jdbc/with-db-transaction [t-conn *db*]
+    (jdbc/db-set-rollback-only! t-conn)
+    (let [timestamp (java.util.Date.)]
+      (is (= 1 (db/save-message!
+                 t-conn
+                 {:name "Bob"
+                  :message "Hello, World"
+                  :timestamp timestamp}
+                 {:connection t-conn})))
+      (is (=
+            {:name "Bob"
+             :message "Hello, World"
+             :timestamp timestamp}
+            (-> (db/get-messages t-conn {})
+                (first)
+                (select-keys [:name :message :timestamp])))))))

@@ -1,17 +1,39 @@
 (ns clojure-webapp.routes.home
   (:require [clojure-webapp.layout :as layout]
-            [compojure.core :refer [defroutes GET]]
+            [compojure.core :refer [defroutes GET POST]]
             [ring.util.http-response :as response]
-            [clojure.java.io :as io]))
+            [clojure-webapp.db.core :as db]
+            [clojure.java.io :as io]
+            [bouncer.core :as b]
+            [bouncer.validators :as v]))
 
-(defn home-page []
-  (layout/render
-    "home.html" {:docs (-> "docs/docs.md" io/resource slurp)}))
+(defn home-page [{:keys [flash]}]
+      (layout/render
+        "home.html" (merge {:messages (db/get-messages)}
+                           (select-keys flash [:name :message :errors]))))
 
 (defn about-page []
-  (layout/render "about.html"))
+      (layout/render "about.html"))
+
+(defn validate-message [params]
+      (first
+        (b/validate
+          params
+          :name v/required
+          :message [v/required [v/min-count 10]])))
+
+(defn save-message! [{:keys [params]}]
+      (if-let [errors (validate-message params)]
+              (-> (response/found "/")
+                  (assoc :flash (assoc params :errors errors)))
+              (do
+                  (db/save-message!
+                    (assoc params :timestamp (java.util.Date.)))
+                  (response/found "/"))))
+
 
 (defroutes home-routes
-  (GET "/" [] (home-page))
-  (GET "/about" [] (about-page)))
+           (GET "/" request (home-page request))
+           (GET "/about" [] (about-page))
+           (POST "/message" request (save-message! request)))
 

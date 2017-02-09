@@ -19,3 +19,12 @@ WHERE id = :id
 -- :doc delete a user given the id
 DELETE FROM users
 WHERE id = :id
+
+-- :name save-message! :! :n
+-- :doc creates a new message using the name, messagem and timestamp keys
+INSERT INTO guestbook
+(name, message, timestamp)
+VALUES (:name, :message, :timestamp)
+-- :name get-messages :? :*
+-- :doc selects all available messages
+SELECT * from guestbook
