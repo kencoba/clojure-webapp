@@ -16,6 +16,12 @@ To start a web server for the application, run:
 
     lein run
 
+## Testing with database
+
+    (use 'clojure-webapp.db.core)
+    (mount/start #'clojure-webapp.config/env)
+    (mount.core/start #'clojure-webapp.db.core/*db*)
+
 ## License
 
 Copyright © 2017 FIXME
