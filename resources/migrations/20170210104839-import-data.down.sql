@@ -1,0 +1,9 @@
+TRUNCATE TABLE set_schedule;
+TRUNCATE TABLE set_course;
+TRUNCATE TABLE student;
+TRUNCATE TABLE entry;
+TRUNCATE TABLE daily;
+TRUNCATE TABLE room;
+TRUNCATE TABLE schedule;
+TRUNCATE TABLE course;
+TRUNCATE TABLE project;

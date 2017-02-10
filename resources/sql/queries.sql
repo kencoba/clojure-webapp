@@ -63,7 +63,7 @@ INSERT INTO set_schedule
 VALUES (:set_id, :schedule_id)
 
 -- :name get-students :? :*
--- :doc selects students infomation
+-- :doc selects students infomation. if schedule is a set-schedule, then select all students on sub schedules.
 SELECT schedule.id, schedule.schedule_cd, schedule.capacity, student.student_cd
 FROM schedule
 INNER JOIN entry
@@ -72,3 +72,16 @@ INNER JOIN student
     ON entry.id = student.entry_id
 WHERE
    schedule.schedule_cd = :schedule_cd
+UNION
+SELECT sub_sch.id, sub_sch.schedule_cd, sub_sch.capacity, student.student_cd
+FROM set_schedule
+INNER JOIN schedule AS set_sch
+    ON set_schedule.set_id = set_sch.id
+INNER JOIN schedule AS sub_sch
+    ON set_schedule.schedule_id = sub_sch.id
+INNER JOIN entry
+    ON set_schedule.schedule_id = entry.schedule_id
+INNER JOIN student
+    ON entry.id = student.entry_id
+WHERE
+    set_sch.schedule_cd = :schedule_cd
