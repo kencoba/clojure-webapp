@@ -85,3 +85,27 @@ INNER JOIN student
     ON entry.id = student.entry_id
 WHERE
     set_sch.schedule_cd = :schedule_cd
+
+-- :name get-daily :? :*
+-- :doc selects all daily infomation on a schedule.
+SELECT room.name, daily.open_time, daily.start_time, daily.end_time
+FROM daily
+INNER JOIN room
+    ON daily.room_id = room.id
+INNER JOIN schedule
+    ON schedule.id = daily.schedule_id
+WHERE
+    schedule.schedule_cd = :schedule_cd
+UNION
+SELECT room.name, daily.open_time, daily.start_time, daily.end_time
+FROM set_schedule
+INNER JOIN schedule AS set_sch
+    ON set_schedule.set_id = set_sch.id
+INNER JOIN schedule AS sub_sch
+    ON set_schedule.schedule_id = sub_sch.id
+INNER JOIN daily
+    ON sub_sch.id = daily.schedule_id
+INNER JOIN room
+    ON room.id = daily.room_id 
+WHERE
+    set_sch.schedule_cd = :schedule_cd
