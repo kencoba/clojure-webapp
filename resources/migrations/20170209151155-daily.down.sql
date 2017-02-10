@@ -1,3 +1,5 @@
+DROP TABLE set_schedule;
+DROP TABLE set_course;
 DROP TABLE student;
 DROP TABLE entry;
 DROP TABLE daily;
